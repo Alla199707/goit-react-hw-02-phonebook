@@ -1,6 +1,9 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import ContactForm from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter/Filter';
+import { Container, Title } from './Container/Container.styled';
 
 export class App extends Component {
   state = {
@@ -12,16 +15,55 @@ export class App extends Component {
     ],
     filter: '',
   };
-  render() {
-    return (
-      <div>
-        <h1>Phonebook</h1>
-        <ContactForm />
 
-        <h2>Contacts</h2>
-        {/* <Filter/> */}
-        {/* <ContactList/> */}
-      </div>
+  addContact = contactData => {
+    const newContact = { ...contactData, id: nanoid() };
+    const newName = newContact.name.toLowerCase();
+    this.state.contacts.find(item => newName === item.name.toLowerCase())
+      ? alert(`${newContact.name}is already in contacts.`)
+      : this.setState(prevState => {
+          return {
+            contacts: [newContact, ...prevState.contacts],
+          };
+        });
+  };
+
+  filterContact = e => {
+    this.setState({ filter: e.currentTarget.value.trim() });
+  };
+
+  getFilterContacts = () => {
+    const { contacts, filter } = this.state;
+    const filterRegister = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filterRegister)
+    );
+  };
+
+  deleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(el => el.id !== id),
+    }));
+  };
+  render() {
+    const { filter } = this.state;
+    const filteredContacts = this.getFilterContacts();
+    return (
+      <Container>
+        <Title>Phonebook</Title>
+        <ContactForm addContact={this.addContact} />
+
+        <Title>Contacts</Title>
+        <Filter value={filter} onChange={this.filterContact} />
+        {this.state.contacts[0] && filteredContacts[0] ? (
+          <ContactList
+            contacts={filteredContacts}
+            deleteContact={this.deleteContact}
+          />
+        ) : (
+          <p>There’s nothing here yet...</p>
+        )}
+      </Container>
     );
   }
 }
