@@ -8,10 +8,6 @@ class ContactForm extends Component {
     number: '',
   };
 
-  // handleChange = ({ target: { name, value } }) => {
-  //   this.setState({ [name]: value });
-  // };
-
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -55,5 +51,7 @@ class ContactForm extends Component {
     );
   }
 }
-
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default ContactForm;
