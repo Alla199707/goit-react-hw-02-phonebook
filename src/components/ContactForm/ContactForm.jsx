@@ -16,6 +16,7 @@ class ContactForm extends Component {
     e.preventDefault();
     const { addContact } = this.props;
     addContact({ ...this.state });
+    this.setState({ name: '', number: '' });
   };
 
   render() {
