@@ -1,10 +1,15 @@
 import PropTypes from 'prop-types';
 import ContactItem from '../ContactItem/ContactItem';
-import { List } from './ContactList.styled';
+import { List, Button, ListItem } from './ContactList.styled';
 const ContactList = ({ contacts, deleteContact }) => {
   return (
     <List>
-      <ContactItem contacts={contacts} deleteContact={deleteContact} />
+      {contacts.map(contact => (
+        <ListItem key={contact.id}>
+          <ContactItem contacts={contact} />
+          <Button onClick={() => deleteContact(contact.id)}>Delete</Button>
+        </ListItem>
+      ))}
     </List>
   );
 };
@@ -12,7 +17,9 @@ const ContactList = ({ contacts, deleteContact }) => {
 ContactList.propTypes = {
   deleteContact: PropTypes.func.isRequired,
   contacts: PropTypes.arrayOf(
-    PropTypes.objectOf(PropTypes.string.isRequired).isRequired
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    })
   ).isRequired,
 };
 
